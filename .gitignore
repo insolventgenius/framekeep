@@ -1,0 +1,7 @@
+/target/
+/dist/
+.DS_Store
+/framekeep.sqlite3
+/framekeep.sqlite3-*
+/vendor/x-t50-3d-lut-v100/
+/vendor/x-t50-3d-lut-v100.zip

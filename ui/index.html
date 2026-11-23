@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: framekeep-preview:; base-uri 'none'; form-action 'none'">
+  <title>Framekeep</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-mark" viewBox="0 0 24 24"><path d="M3 9V4h5m8 0h5v5m0 6v5h-5m-8 0H3v-5"/><circle cx="12" cy="12" r="4"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><rect x="7" y="4" width="13" height="13" rx="2"/><path d="M4 8v11a1 1 0 0 0 1 1h11"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 9a4.5 4.5 0 0 0-8.8-1.3A4.5 4.5 0 0 0 3.2 9c0 4.4 8.8 9.8 8.8 9.8s8.8-5.4 8.8-9.8Z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+    <symbol id="i-open" viewBox="0 0 24 24"><path d="M3 17V7a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v1m-17 7 3-6h16l-3 7a2 2 0 0 1-1.8 1H5a2 2 0 0 1-2-2Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16m-14 0 1 13h10l1-13M9 7V4h6v3m-5 3v6m4-6v6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.1m3.2 0h.1m3.2 0h.1m3.2 0h.1M7 14h.1m3.2 0h3.4m3.2 0h.1"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2 6m2-11v5h-5"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 5v14M17 5v14M3 12h4m10 0h4"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="1.4"/><path d="m3 16 5-4 4 3 4-5 5 5"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h15m-4-4 4 4-4 4m5 4H5m4-4-4 4 4 4"/></symbol>
+    <symbol id="i-drag" viewBox="0 0 24 24"><path d="M13 4h7v7m0-7-9 9m7 1v6H4V6h6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h5m4 0h7M4 12h10m4 0h2M4 17h2m4 0h10"/><circle cx="11" cy="7" r="2"/><circle cx="16" cy="12" r="2"/><circle cx="8" cy="17" r="2"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M15 4h5v5m0-5-5 5M4 10v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-7m-3-3H5a1 1 0 0 0-1 1Z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></symbol>
+  </svg>
+
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand"><span class="brand-mark"><svg><use href="#i-mark"/></svg></span> Framekeep</div>
+      <nav aria-label="Library views">
+        <div class="section-label">Library</div>
+        <button class="nav-button active" data-filter="unreviewed" aria-current="page"><svg><use href="#i-layers"/></svg><span>Unreviewed</span><output id="unreviewed-count">0</output></button>
+        <button class="nav-button" data-filter="keep"><svg><use href="#i-check"/></svg><span>Keep</span><output id="keep-count">0</output></button>
+        <button class="nav-button" data-filter="delete"><svg><use href="#i-trash"/></svg><span>Delete</span><output id="delete-count">0</output></button>
+        <button class="nav-button" data-filter="favorites"><svg><use href="#i-heart"/></svg><span>Favorites</span><output id="favorites-count">0</output></button>
+      </nav>
+      <div id="folder-section" class="source" hidden>
+        <div class="section-label">Source folder</div>
+        <div class="folder-card">
+          <svg><use href="#i-folder"/></svg>
+          <div><strong id="source-name"></strong><small id="source-files"></small></div>
+          <button id="refresh" class="icon-button" title="Rescan folder (⌘R)" aria-label="Rescan folder"><svg><use href="#i-refresh"/></svg></button>
+        </div>
+      </div>
+      <button id="shortcuts" class="shortcuts"><svg><use href="#i-keyboard"/></svg><span>Keyboard shortcuts</span><kbd>?</kbd></button>
+    </aside>
+
+    <main>
+      <header class="top">
+        <div class="top-title"><h1 id="heading">Photo library</h1><p id="subtitle" hidden></p></div>
+        <div class="top-actions">
+          <div class="segments view-mode" id="view-mode" role="group" aria-label="Library layout" hidden>
+            <button data-view="viewer" aria-label="Viewer" title="Viewer"><svg><use href="#i-image"/></svg><span>Viewer</span></button>
+            <button data-view="grid" aria-label="Grid" title="Grid"><svg><use href="#i-grid"/></svg><span>Grid</span></button>
+          </div>
+          <button class="button secondary" id="header-undo" hidden>Undo Trash</button>
+          <button class="button trash" id="recycle-all" hidden><svg><use href="#i-trash"/></svg><span>Recycle all</span></button>
+          <button class="button trash" id="trash-kept-raws" hidden><svg><use href="#i-trash"/></svg><span>Trash all RAWs</span></button>
+          <button class="button primary open" aria-label="Open folder" data-open><svg><use href="#i-open"/></svg><span>Open folder</span></button>
+        </div>
+      </header>
+
+      <section id="raw-trash-progress" class="raw-trash-progress" aria-label="RAW Trash progress" hidden>
+        <div><label for="raw-trash-meter">Moving kept RAWs to Trash</label><span id="raw-trash-count"></span></div>
+        <progress id="raw-trash-meter" value="0" max="1"></progress>
+      </section>
+
+      <div id="welcome" class="welcome">
+        <section class="welcome-card" aria-labelledby="welcome-title">
+          <div class="welcome-copy">
+            <div class="formats-label"><svg><use href="#i-image"/></svg> PNG, FUJIFILM RAF &amp; HIF</div>
+            <h2 id="welcome-title">Find your<br>keepers.</h2>
+            <p>Open a folder to review photos, flip between RAW and developed, and keep the shots you want.</p>
+            <button class="button primary" data-open><svg><use href="#i-folder"/></svg> Choose a folder <svg class="cta-arrow"><use href="#i-arrow"/></svg></button>
+          </div>
+        </section>
+        <div class="quick-keys" aria-label="Quick shortcuts">
+          <span><kbd>←</kbd><kbd>→</kbd> Browse</span>
+          <span><kbd>K</kbd> Keep photo</span>
+          <span><kbd>V</kbd> Switch format</span>
+          <span><kbd>⌫</kbd> Mark for deletion</span>
+        </div>
+      </div>
+
+      <section id="empty" class="empty" hidden>
+        <div class="empty-icon"><svg><use href="#i-image"/></svg></div>
+        <h2 id="empty-title"></h2><p id="empty-copy"></p>
+        <button id="empty-action" class="button secondary"></button>
+      </section>
+
+      <section id="grid" class="grid-panel" aria-label="Photo grid" hidden>
+        <div class="grid-toolbar">
+          <span>Thumbnails</span>
+          <label class="grid-size"><svg><use href="#i-grid"/></svg><input id="grid-size" type="range" min="100" max="300" step="10" value="180" aria-label="Thumbnail size"><svg><use href="#i-grid"/></svg></label>
+        </div>
+        <div id="grid-scroll" class="grid-scroll"><div id="grid-track" class="grid-track"></div></div>
+      </section>
+
+      <section id="review" class="review" aria-label="Photo review" hidden>
+        <div class="workspace">
+          <div class="viewer">
+            <div class="viewer-top">
+              <div class="file-info">
+                <strong id="file-name"></strong>
+                <span id="file-folder"></span>
+              </div>
+              <div class="viewer-tools">
+                <div id="format" class="segments" role="group" aria-label="Photo version">
+                  <button id="view-raw" title="Show RAW (V)">RAW</button>
+                  <button id="view-developed" title="Show developed version (V)">Developed</button>
+                </div>
+                <select id="developed-format" aria-label="Developed file type" title="Developed file type" hidden>
+                  <option value="png">PNG</option>
+                  <option value="hif">HIF</option>
+                </select>
+                <button id="edit" class="button secondary edit-button" title="Edit this version"><svg><use href="#i-sliders"/></svg><span>Edit</span></button>
+              </div>
+            </div>
+            <div class="stage">
+              <div class="preview-area" id="preview-area">
+                <div id="preview-status" role="status"></div>
+                <img id="preview" alt="" draggable="false" hidden>
+              </div>
+              <button class="icon-button step" id="previous" aria-label="Previous photo" title="Previous photo (←)"><svg><use href="#i-left"/></svg></button>
+              <button class="icon-button step" id="next" aria-label="Next photo" title="Next photo (→)"><svg><use href="#i-right"/></svg></button>
+            </div>
+            <div class="viewer-bottom">
+              <span id="drag-hint" class="drag-hint"><svg><use href="#i-drag"/></svg>Drag preview to another app</span>
+              <div class="actions">
+                <button id="keep" class="button keep" title="Keep photo (K)"><svg><use href="#i-check"/></svg><span>Keep</span></button>
+                <button id="trash" class="button trash" title="Mark for deletion (⌫)"><svg><use href="#i-trash"/></svg><span>Delete</span></button>
+                <button id="favorite" class="button favorite" aria-label="Add to favorites" title="Add to favorites (H)"><svg><use href="#i-heart"/></svg></button>
+                <button id="unreview" class="button secondary" aria-label="Return to Unreviewed" title="Return to Unreviewed" hidden><svg><use href="#i-refresh"/></svg></button>
+              </div>
+              <span class="position" id="position"></span>
+            </div>
+          </div>
+          <aside id="editor" class="editor" aria-label="Edit photo" hidden>
+            <div class="editor-header"><h2>Adjust</h2><span id="edit-format"></span></div>
+            <div class="edit-fields">
+              <div id="grade-panel" class="grade-panel" hidden>
+                <label for="grade">Color grade</label>
+                <select id="grade">
+                  <option value="original">Original</option>
+                  <option value="vivid">Vivid</option>
+                  <option value="warm_film">Warm Film</option>
+                  <option value="cool_fade">Cool Fade</option>
+                  <option value="monochrome">Monochrome</option>
+                  <optgroup id="fujifilm-grades" label="Fujifilm X-T50" hidden></optgroup>
+                  <option id="missing-lut" disabled hidden>Unavailable Fujifilm LUT</option>
+                </select>
+                <p id="missing-lut-note" hidden>Restore the local LUT files and reopen Framekeep to apply this grade.</p>
+                <label class="edit-field" id="strength-field" hidden><span>Grade intensity <output for="strength"></output></span><input data-edit="strength" id="strength" type="range" min="0" max="100" value="100"></label>
+              </div>
+              <label class="edit-field"><span>Exposure <output for="exposure"></output></span><input data-edit="exposure" id="exposure" type="range" min="-200" max="200" value="0"></label>
+              <label class="edit-field"><span>Contrast <output for="contrast"></output></span><input data-edit="contrast" id="contrast" type="range" min="-100" max="100" value="0"></label>
+              <label class="edit-field"><span>Highlights <output for="highlights"></output></span><input data-edit="highlights" id="highlights" type="range" min="-100" max="100" value="0"></label>
+              <label class="edit-field"><span>Shadows <output for="shadows"></output></span><input data-edit="shadows" id="shadows" type="range" min="-100" max="100" value="0"></label>
+              <label class="edit-field"><span>Saturation <output for="saturation"></output></span><input data-edit="saturation" id="saturation" type="range" min="-100" max="100" value="0"></label>
+              <label class="edit-field"><span>Warmth <output for="warmth"></output></span><input data-edit="warmth" id="warmth" type="range" min="-100" max="100" value="0"></label>
+              <div class="edit-buttons">
+                <button id="rotate" class="button secondary"><svg><use href="#i-rotate"/></svg>Rotate</button>
+                <button id="compare" class="button secondary" aria-pressed="false">Original</button>
+                <button id="reset-edit" class="quiet">Reset</button>
+              </div>
+            </div>
+            <div class="editor-footer">
+              <button id="save-new-photo" class="button primary"><svg><use href="#i-image"/></svg>Save New Photo</button>
+              <div class="editor-close">
+                <button id="cancel-edit" class="button secondary">Cancel</button>
+                <button id="save-edit" class="button secondary">Done</button>
+              </div>
+            </div>
+          </aside>
+        </div>
+        <section class="filmstrip" aria-label="Filmstrip">
+          <div class="filmstrip-header">
+            <div><svg><use href="#i-film"/></svg> Filmstrip</div>
+            <button id="undo" class="quiet" hidden>Undo Trash <kbd>⌘Z</kbd></button>
+          </div>
+          <div id="film-scroll" class="film-scroll" tabindex="0" aria-label="Photo thumbnails">
+            <div id="film-track" class="film-track"></div>
+          </div>
+        </section>
+      </section>
+
+      <footer class="status-bar">
+        <span><i></i><span id="footer-status" role="status">Ready</span></span>
+        <span>On this Mac</span>
+      </footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" hidden>
+    <span id="toast-text" role="status"></span>
+    <button id="toast-undo" class="quiet" hidden>Undo</button>
+    <button id="toast-close" class="icon-button" aria-label="Dismiss notification"><svg><use href="#i-close"/></svg></button>
+  </div>
+  <dialog id="confirm-recycle">
+    <div class="dialog-header"><h2 id="recycle-title">Recycle all photos?</h2><button id="recycle-close" class="icon-button" aria-label="Cancel"><svg><use href="#i-close"/></svg></button></div>
+    <p id="recycle-copy"></p>
+    <div class="dialog-actions">
+      <button id="recycle-cancel" class="button secondary" autofocus>Cancel</button>
+      <button id="recycle-confirm" class="button trash">Recycle all</button>
+    </div>
+  </dialog>
+  <dialog id="help">
+    <div class="dialog-header"><h2>Keyboard shortcuts</h2><button id="help-close" class="icon-button" aria-label="Close shortcuts"><svg><use href="#i-close"/></svg></button></div>
+    <dl>
+      <div><dt>Previous / next photo</dt><dd><kbd>←</kbd> <kbd>→</kbd></dd></div>
+      <div><dt>Keep photo</dt><dd><kbd>K</kbd></dd></div>
+      <div><dt>Toggle favorite</dt><dd><kbd>H</kbd></dd></div>
+      <div><dt>Switch RAW / Developed</dt><dd><kbd>V</kbd></dd></div>
+      <div><dt>Switch between Viewer and Grid</dt><dd><kbd>G</kbd></dd></div>
+      <div><dt>Mark photo for deletion</dt><dd><kbd>⌫</kbd></dd></div>
+      <div><dt>Undo a review decision or move to Trash</dt><dd><kbd>⌘Z</kbd></dd></div>
+      <div><dt>Open / rescan folder</dt><dd><kbd>⌘O</kbd> <kbd>⌘R</kbd></dd></div>
+    </dl>
+  </dialog>
+</body>
+</html>
